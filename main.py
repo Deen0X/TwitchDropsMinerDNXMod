@@ -23,6 +23,7 @@ if __name__ == "__main__":
 
     from translate import _
     from twitch import Twitch
+    from web_server import WebServer
     from settings import Settings
     from version import __version__
     from exceptions import CaptchaRequired
@@ -62,6 +63,7 @@ if __name__ == "__main__":
         log: bool
         tray: bool
         dump: bool
+        port: int
 
         # TODO: replace int with union of literal values once typeshed updates
         @property
@@ -106,6 +108,7 @@ if __name__ == "__main__":
     parser.add_argument("--tray", action="store_true")
     parser.add_argument("--log", action="store_true")
     parser.add_argument("--dump", action="store_true")
+    parser.add_argument("--port", type=int, default=5801, help="Web interface port")
     # undocumented debug args
     parser.add_argument(
         "--debug-ws", dest="_debug_ws", action="store_true", help=argparse.SUPPRESS
@@ -157,6 +160,11 @@ if __name__ == "__main__":
         if sys.platform == "linux":
             loop.add_signal_handler(signal.SIGINT, lambda *_: client.gui.close())
             loop.add_signal_handler(signal.SIGTERM, lambda *_: client.gui.close())
+        
+        # Start web server
+        web_server = WebServer(client, port=args.port)
+        await web_server.start()
+
         try:
             await client.run()
         except CaptchaRequired:
@@ -169,6 +177,7 @@ if __name__ == "__main__":
             client.print("Fatal error encountered:\n")
             client.print(traceback.format_exc())
         finally:
+            await web_server.stop()
             if sys.platform == "linux":
                 loop.remove_signal_handler(signal.SIGINT)
                 loop.remove_signal_handler(signal.SIGTERM)

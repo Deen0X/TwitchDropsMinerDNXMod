@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNX TMWI</title>
+    <link rel="icon" type="image/png" href="/icon.png">
+    <style>
+        :root {
+            --bg-color: #0e0e10;
+            --card-bg: #18181b;
+            --text-color: #efeff1;
+            --accent-color: #a970ff;
+            --accent-hover: #772ce8;
+            --success-color: #00f593;
+            --warning-color: #ff9900;
+            --danger-color: #ff4f4d;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #2d2d30;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header img {
+            height: 48px;
+            width: 48px;
+            margin-right: 1rem;
+            border-radius: 8px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, #a970ff, #00f593);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                grid-template-columns: 2fr 1fr;
+                /* Main (Inventory) : Sidebar (Status/Progress) */
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            /* Spacing for stacked cards in mobile view */
+        }
+
+        .card:last-child {
+            margin-bottom: 0;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .status-item {
+            background: #252528;
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: #adadb8;
+            margin-bottom: 0.4rem;
+        }
+
+        .status-value {
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background-color: #3a3a3d;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .inventory-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .campaign-item {
+            background: #252528;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--accent-color);
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .campaign-art {
+            width: 80px;
+            height: 107px;
+            /* roughly 3:4 aspect ratio */
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+            background-color: #111;
+        }
+
+        .campaign-content {
+            flex-grow: 1;
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-name {
+            font-size: 0.9rem;
+            color: #adadb8;
+            display: block;
+        }
+
+        .campaign-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .campaign-status {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #333;
+            white-space: nowrap;
+        }
+
+        .campaign-status.Active {
+            background: rgba(0, 245, 147, 0.2);
+            color: var(--success-color);
+        }
+
+        .campaign-status.Expired {
+            background: rgba(255, 79, 77, 0.2);
+            color: var(--danger-color);
+        }
+
+        .drop-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .drop-item {
+            background: #1e1e21;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-width: 200px;
+            flex: 1 1 200px;
+        }
+
+        .drop-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .drop-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .drop-name {
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .drop-status {
+            font-size: 0.8rem;
+        }
+
+        .claimed {
+            color: var(--success-color);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #adadb8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="/icon.png" alt="DNX Logo">
+        <h1>DNX TMWI <span style="font-size: 0.5em; color: #adadb8; font-weight: normal;">(Twitch Miner Web
+                Interface)</span></h1>
+    </div>
+
+    <div class="container">
+        <!-- Main Column: Inventory (Now Swapped) -->
+        <div class="main-content">
+            <div class="card">
+                <h2>Inventory</h2>
+                <div id="inventory-list" class="inventory-grid">
+                    <div class="loading">Loading inventory...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Status & Current Progress (Now Swapped) -->
+        <div class="sidebar">
+            <div class="card">
+                <h2>Live Status</h2>
+                <div id="status-container" class="status-grid">
+                    <div class="loading">Loading status...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Current Progress</h2>
+                <div id="progress-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                renderStatus(data);
+            } catch (e) {
+                console.error("Failed to fetch status", e);
+            }
+        }
+
+        async function fetchInventory() {
+            try {
+                const response = await fetch('/api/inventory');
+                const data = await response.json();
+                renderInventory(data);
+            } catch (e) {
+                console.error("Failed to fetch inventory", e);
+            }
+        }
+
+        function renderStatus(data) {
+            const container = document.getElementById('status-container');
+            const progressContainer = document.getElementById('progress-container');
+
+            container.innerHTML = `
+            <div class="status-item">
+                <div class="status-label">State</div>
+                <div class="status-value" style="color: var(--success-color)">${data.state}</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">User ID</div>
+                <div class="status-value">${data.user_id || 'Not Logged In'}</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Active Game</div>
+                <div class="status-value" title="${data.active_game}">${data.active_game || '-'}</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Current Campaign</div>
+                <div class="status-value" title="${data.active_campaign}">${data.active_campaign || '-'}</div>
+            </div>
+        `;
+
+            if (data.active_game && data.active_game !== '...') {
+                progressContainer.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-size: 0.9rem; color: #adadb8;">Campaign Progress</span>
+                        <span style="font-size: 0.9rem;">${data.campaign_remaining}</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${data.campaign_progress}"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.8rem; margin-top: 3px; color: var(--accent-color);">${data.campaign_progress}</div>
+                </div>
+                
+                <div>
+                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-size: 0.9rem; color: #adadb8;">Drop: ${data.drop_rewards}</span>
+                        <span style="font-size: 0.9rem;">${data.drop_remaining}</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${data.drop_progress_percent}"></div>
+                    </div>
+                     <div style="text-align: right; font-size: 0.8rem; margin-top: 3px; color: var(--accent-color);">${data.drop_progress_percent}</div>
+                </div>
+            `;
+            } else {
+                progressContainer.innerHTML = '<div style="color: #666; text-align: center; padding: 1rem;">No active mining in progress</div>';
+            }
+        }
+
+        function renderInventory(data) {
+            const list = document.getElementById('inventory-list');
+
+            let html = '';
+            data.forEach(camp => {
+                if (camp.status === "Expired" && !camp.game.includes("DNX")) return;
+
+                let dropsHtml = '';
+                camp.drops.forEach(d => {
+                    const isClaimed = d.is_claimed;
+                    const isReady = d.can_claim;
+
+                    let statusText = d.name;
+                    let statusClass = "";
+                    let progressText = `${(d.progress * 100).toFixed(1)}%`;
+
+                    if (isClaimed) {
+                        statusText = "Claimed";
+                        statusClass = "claimed";
+                        progressText = "100%";
+                    } else if (isReady) {
+                        statusText = "Ready to Claim";
+                        statusClass = "claimed"; // re-use green color or make orange
+                    }
+
+                    // Fallback image if none
+                    const dropImg = d.image_url ? `<img src="${d.image_url}" class="drop-img" alt="Drop Art">` : '<div class="drop-img" style="background:#333;border-radius:4px;"></div>';
+
+                    dropsHtml += `
+                    <div class="drop-item">
+                        ${dropImg}
+                        <div class="drop-info">
+                            <span class="drop-name" title="${d.name}">${d.name}</span>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span class="drop-status ${statusClass}">${isClaimed ? '✔ Claimed' : (isReady ? '! Ready' : progressText)}</span>
+                            </div>
+                            ${!isClaimed && !isReady ? `<div class="progress-bar-container" style="height:4px; margin-top:4px;"><div class="progress-bar" style="width:${d.progress * 100}%"></div></div>` : ''}
+                        </div>
+                    </div>
+                `;
+                });
+
+                const campaignImg = camp.image_url ? `<img src="${camp.image_url}" class="campaign-art" alt="Game Art">` : '<div class="campaign-art"></div>';
+
+                html += `
+                <div class="campaign-item">
+                    ${campaignImg}
+                    <div class="campaign-content">
+                        <div class="campaign-header">
+                            <div>
+                                <span class="game-name">${camp.game}</span>
+                                <span class="campaign-title">${camp.name}</span>
+                            </div>
+                            <span class="campaign-status ${camp.status}">${camp.status}</span>
+                        </div>
+                        <div class="drop-list">
+                            ${dropsHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+            });
+
+            if (html === '') html = '<div class="loading">No active campaigns found</div>';
+            list.innerHTML = html;
+        }
+
+        fetchStatus();
+        fetchInventory();
+        setInterval(fetchStatus, 5000);
+        setInterval(fetchInventory, 30000);
+
+    </script>
+</body>
+
+</html>

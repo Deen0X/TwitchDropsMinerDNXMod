@@ -45,6 +45,7 @@ to_add: list[tuple[Path, str, bool]] = [
     # SeleniumWire HTTPS/SSL cert file and key
     (Path(SITE_PACKAGES_PATH, "seleniumwire/ca.crt"), "./seleniumwire", False),
     (Path(SITE_PACKAGES_PATH, "seleniumwire/ca.key"), "./seleniumwire", False),
+    (Path("web"), "./web", True),
 ]
 for lang_filepath in WORKING_DIR.joinpath("lang").glob("*.json"):
     if lang_filepath.stem != DEFAULT_LANG:

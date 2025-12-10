@@ -1,3 +1,65 @@
+# TwitchDropsMiner DNX Mod
+
+Este proyecto es una modificación del [TwitchDropsMiner](https://github.com/DevilXD/TwitchDropsMiner) original creado por DevilXD.
+
+## Objetivo
+El objetivo principal de esta aplicación es automatizar el proceso de obtención de "Drops" de Twitch. Permite "ver" streams elegibles para drops de manera desatendida, reclamando las recompensas automáticamente cuando están disponibles.
+
+## Modificaciones
+La modificación principal de esta versión ("DNX Mod") es la integración de un **servidor web** que proporciona una interfaz de usuario accesible desde el navegador.
+
+### Servidor Web
+*   **Funcionalidad**: Permite monitorizar el progreso de las campañas, ver el inventario y el estado general de la aplicación sin depender exclusivamente de la consola o la interfaz gráfica de escritorio.
+*   **Puerto por defecto**: El servidor web se inicia automáticamente en el puerto `5801`.
+
+### Parámetros de Ejecución
+Se ha añadido el parámetro `--port` para personalizar el puerto de escucha del servidor web. Esto es especialmente útil para ejecutar múltiples instancias en la misma máquina.
+
+**Sintaxis:**
+```bash
+--port <número_puerto>
+```
+
+**Ejemplo:**
+Para lanzar el minero con el servidor web en el puerto 5805:
+```bash
+TwitchDropsMiner.exe --port 5805
+```
+
+(Nota: El nombre del ejecutable puede variar dependiendo de cómo se lance el script o si es una versión congelada).
+
+======================================= ENGLISH
+
+# TwitchDropsMiner DNX Mod
+
+This project is a modification of the original [TwitchDropsMiner](https://github.com/DevilXD/TwitchDropsMiner) created by DevilXD.
+
+## Objective
+The main objective of this application is to automate the process of obtaining Twitch "Drops". It allows for unattended "watching" of drop-eligible streams, automatically claiming rewards when they become available.
+
+## Modifications
+The primary modification in this version ("DNX Mod") is the integration of a **web server** that provides a user interface accessible via a browser.
+
+### Web Server
+*   **Functionality**: Allows monitoring of campaign progress, viewing inventory, and checking the general status of the application without relying exclusively on the console or the desktop GUI.
+*   **Default Port**: The web server starts automatically on port `5801`.
+
+### Execution Parameters
+The `--port` parameter has been added to customize the listening port of the web server. This is especially useful for running multiple instances on the same machine.
+
+**Syntax:**
+```bash
+--port <port_number>
+```
+
+**Example:**
+To launch the miner with the web server on port 5805:
+```bash
+TwitchDropsMiner.exe --port 5805
+```
+
+(Note: The executable name may vary depending on how the script is launched or if it is a frozen version).
+
 # Twitch Drops Miner
 
 This application allows you to AFK mine timed Twitch drops, without having to worry about switching channels when the one you were watching goes offline, claiming the drops, or even receiving the stream data itself. This helps you save on bandwidth and hassle.

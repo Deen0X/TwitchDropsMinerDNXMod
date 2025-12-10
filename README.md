@@ -8,6 +8,10 @@ El objetivo principal de esta aplicación es automatizar el proceso de obtenció
 ## Modificaciones
 La modificación principal de esta versión ("DNX Mod") es la integración de un **servidor web** que proporciona una interfaz de usuario accesible desde el navegador.
 
+<img width="1050" height="773" alt="image" src="https://github.com/user-attachments/assets/25fae2a0-1f6d-4578-9718-c30c2b25a98c" />
+
+PC Web Interface
+
 ### Servidor Web
 *   **Funcionalidad**: Permite monitorizar el progreso de las campañas, ver el inventario y el estado general de la aplicación sin depender exclusivamente de la consola o la interfaz gráfica de escritorio.
 *   **Puerto por defecto**: El servidor web se inicia automáticamente en el puerto `5801`.
@@ -39,6 +43,10 @@ The main objective of this application is to automate the process of obtaining T
 
 ## Modifications
 The primary modification in this version ("DNX Mod") is the integration of a **web server** that provides a user interface accessible via a browser.
+
+<img width="576" height="1280" alt="image" src="https://github.com/user-attachments/assets/b5445728-1776-4c92-84ad-02505e8e9744" />
+
+Mobile Web Interface
 
 ### Web Server
 *   **Functionality**: Allows monitoring of campaign progress, viewing inventory, and checking the general status of the application without relying exclusively on the console or the desktop GUI.
